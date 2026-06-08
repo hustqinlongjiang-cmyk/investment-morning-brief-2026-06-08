@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>6月8日早盘文本情报分析</title>
+  <meta name="description" content="基于6月8日早盘Word文本的结构化市场情报摘要。">
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      --ink: #182033;
+      --muted: #647086;
+      --line: #dfe4ee;
+      --surface: #f7f8fb;
+      --panel: #ffffff;
+      --blue: #5477c4;
+      --blue-soft: #eaf1fe;
+      --gold: #b8a037;
+      --gold-soft: #fff4c2;
+      --orange: #cc6f47;
+      --orange-soft: #ffedde;
+      --olive: #71b436;
+      --olive-soft: #d8ecbd;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--surface);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.72;
+    }
+    .wrap { width: min(1120px, calc(100% - 36px)); margin: 0 auto; }
+    header {
+      background: linear-gradient(180deg, #ffffff 0%, #eef3fb 100%);
+      border-bottom: 1px solid var(--line);
+    }
+    .hero { padding: 56px 0 34px; }
+    .kicker { color: var(--blue); font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { margin: 10px 0 16px; font-size: clamp(34px, 5vw, 58px); line-height: 1.06; letter-spacing: 0; }
+    .lead { max-width: 820px; color: #354056; font-size: 18px; }
+    .meta-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+    .pill { border: 1px solid var(--line); border-radius: 999px; background: #fff; padding: 8px 12px; color: var(--muted); font-size: 13px; }
+    main { padding: 34px 0 56px; }
+    section { margin: 34px 0; }
+    h2 { margin: 0 0 14px; font-size: 28px; line-height: 1.25; letter-spacing: 0; }
+    h3 { margin: 6px 0 8px; font-size: 18px; line-height: 1.35; letter-spacing: 0; }
+    p { margin: 0 0 12px; }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .metric, .panel, .signal-card, .chart-block {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .metric { padding: 18px; }
+    .metric strong { display: block; font-size: 32px; line-height: 1; color: var(--blue); }
+    .metric span { display: block; margin-top: 8px; color: var(--muted); font-size: 14px; }
+    .panel { padding: 22px; }
+    .mainline {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .line-item { padding: 16px 0; border-top: 1px solid var(--line); }
+    .line-item:first-child { border-top: 0; padding-top: 0; }
+    .line-item b { color: var(--ink); }
+    .line-item span { color: var(--muted); }
+    .signals { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .signal-card { padding: 16px; border-left: 5px solid var(--blue); }
+    .tone-up { border-left-color: var(--olive); }
+    .tone-down { border-left-color: var(--orange); }
+    .tone-neutral { border-left-color: var(--gold); }
+    .signal-meta { color: var(--muted); font-size: 13px; }
+    .signal-card p { color: var(--muted); font-size: 14px; }
+    .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .chart-block { padding: 18px; }
+    .chart-block img { display: block; width: 100%; height: auto; border-radius: 6px; }
+    .chart-note { color: var(--muted); font-size: 14px; margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #eef3fb; color: #29344a; font-size: 13px; }
+    td { font-size: 14px; }
+    tr:last-child td { border-bottom: 0; }
+    .table-scroll { overflow-x: auto; border-radius: 8px; }
+    .caveat { background: #fff8e1; border: 1px solid #ead98d; border-radius: 8px; padding: 18px; }
+    .source-note { color: var(--muted); font-size: 13px; }
+    footer { color: var(--muted); border-top: 1px solid var(--line); padding: 24px 0 40px; font-size: 13px; }
+    @media (max-width: 860px) {
+      .summary, .mainline, .signals, .chart-grid { grid-template-columns: 1fr; }
+      .hero { padding-top: 38px; }
+      h1 { font-size: 36px; }
+      .lead { font-size: 16px; }
+      th, td { min-width: 120px; }
+    }
+    </style>
+</head>
+<body>
+  <header>
+    <div class="wrap hero">
+      <div class="kicker">Morning Brief · Text Analytics</div>
+      <h1>6月8日早盘文本情报分析</h1>
+      <p class="lead">基于用户提供的 Word 文档，将早盘信息整理为主题、机会、风险与关键数字。报告不接入实时行情，也不构成任何投资建议。</p>
+      <div class="meta-strip">
+        <span class="pill">2026年6月8日早盘</span>
+        <span class="pill">来源：用户提供的本地 Word 文档</span>
+        <span class="pill">分析范围：文本摘要与派生统计</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section>
+      <h2>Executive Summary</h2>
+      <div class="panel">
+        <p><b>早盘主线集中在“政策监管 + AI算力 + 资源涨价 + 两条机会线”。</b> 文档共结构化出 31 条信息，主题提及靠前的是 AI与算力、商品涨价、公司事件、政策监管、机器人。</p>
+        <p><b>机会线更偏产业链供需约束。</b> 人形机器人丝杠和高端光纤预制棒是原文明确列入“投资机会参考”的两条线索；AI算力、内存短缺、预制算力中心也形成同一组产业景气线索。</p>
+        <p><b>风险线来自监管、海外波动与公司事件。</b> 私募/公募监管、以伊冲突、美股科技股回调，以及 ST、减持等公司公告，应作为短期风险监控项。</p>
+      </div>
+      <div class="summary">
+        <div class="metric"><strong>31</strong><span>结构化文本条目</span></div>
+        <div class="metric"><strong>16</strong><span>机会倾向条目</span></div>
+        <div class="metric"><strong>12</strong><span>风险倾向条目</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>早盘主线</h2>
+      <div class="mainline">
+        <div class="panel">
+          <div class="line-item"><b>政策监管：</b><span>国常会强调未来产业前瞻布局，同时私募、公募监管信息密集出现，偏向规范化和风险防范。</span></div>
+          <div class="line-item"><b>AI与算力：</b><span>预制算力中心、AI流量占比、英伟达与韩国存储链合作、OpenAI超级应用构想共同指向算力和AI应用链。</span></div>
+          <div class="line-item"><b>商品涨价：</b><span>硫磺、车规存储芯片、鸡蛋等涨价信息显示部分原料和消费品价格压力升温。</span></div>
+        </div>
+        <div class="panel">
+          <div class="line-item"><b>机器人：</b><span>人形机器人丝杠被列为机会参考，核心逻辑是整机放量拉动线性关节与灵巧手传动部件需求。</span></div>
+          <div class="line-item"><b>光纤光棒：</b><span>A2类光纤预制棒价格大幅上行，扩产周期较长，供需缺口是原文最明确的涨价逻辑之一。</span></div>
+          <div class="line-item"><b>海外风险：</b><span>地缘冲突与美股科技股回调增加外部扰动，短期更适合作为风险监测而非单向结论。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>可视化证据</h2>
+      <p class="chart-note">图表只呈现文本中的条目分布和主题提及，不代表行情涨跌预测。</p>
+      <div class="chart-grid">
+        <figure class="chart-block">
+          <img src="assets/section-distribution.png" alt="章节信息量分布图">
+          <figcaption class="chart-note">行业新闻条目最多，且包含大量数字信息；投资机会参考虽然条目更少，但主题聚焦度更高。</figcaption>
+        </figure>
+        <figure class="chart-block">
+          <img src="assets/theme-frequency.png" alt="主题提及频次与信号倾向图">
+          <figcaption class="chart-note">光纤光棒、机器人、AI与算力是机会侧主线；政策监管、公司事件与海外风险更偏风险侧。</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>机会观察</h2>
+      <div class="signals">
+        
+            <article class="signal-card tone-up">
+              <div class="signal-meta">导语 · 政策监管 / AI与算力 · 待观察</div>
+              <h3>...</h3>
+              <p>关键数字：19个月</p>
+            </article>
+            
+
+            <article class="signal-card tone-up">
+              <div class="signal-meta">行业新闻 · AI与算力 · 待观察</div>
+              <h3>...</h3>
+              <p>关键数字：6月、6日、30%、20%</p>
+            </article>
+            
+
+            <article class="signal-card tone-up">
+              <div class="signal-meta">行业新闻 · AI与算力 · 待观察</div>
+              <h3>...</h3>
+              <p>关键数字：57.4%、42.6%</p>
+            </article>
+            
+
+            <article class="signal-card tone-up">
+              <div class="signal-meta">行业新闻 · 商品涨价 · 待观察</div>
+              <h3>...</h3>
+              <p>关键数字：6月、7日、9800元/吨、1万</p>
+            </article>
+            
+
+            <article class="signal-card tone-up">
+              <div class="signal-meta">行业新闻 · 能源低碳 · 待观察</div>
+              <h3>从国家能源集团获悉，我国自主研发的氢煤混烧技术首次实现了50%绿氢大比例掺烧以及100%纯氢燃烧，标志着我国清洁低碳氢煤混烧技术取得重大突破。</h3>
+              <p>关键数字：50%、100%</p>
+            </article>
+            
+
+            <article class="signal-card tone-up">
+              <div class="signal-meta">行业新闻 · 商品涨价 · 待观察</div>
+              <h3>有数据显示，近三个月，车规级存储芯片整体价格涨幅约在180%。据不完全统计，近期国内共有十余家新能源车企上调售价或收紧优惠，幅度一般在2000元到6000元不等。</h3>
+              <p>关键数字：180%</p>
+            </article>
+            
+      </div>
+    </section>
+
+    <section>
+      <h2>风险观察</h2>
+      <div class="signals">
+        
+            <article class="signal-card tone-down">
+              <div class="signal-meta">宏观新闻 · 政策监管 · 待观察</div>
+              <h3>...</h3>
+              <p>关键数字：无显著数字</p>
+            </article>
+            
+
+            <article class="signal-card tone-down">
+              <div class="signal-meta">宏观新闻 · 地缘与海外 · 短期</div>
+              <h3>...</h3>
+              <p>关键数字：6月、7日、6月、8日</p>
+            </article>
+            
+
+            <article class="signal-card tone-down">
+              <div class="signal-meta">宏观新闻 · 地缘与海外 · 待观察</div>
+              <h3>在伊朗向以色列发射多轮导弹，以回应以军升级对黎巴嫩的军事行动后，美国总统特朗普表示，他现在就要给以色列总理内塔尼亚胡打电话，告诉他“不要反击”。</h3>
+              <p>关键数字：无显著数字</p>
+            </article>
+            
+
+            <article class="signal-card tone-down">
+              <div class="signal-meta">行业新闻 · 政策监管 · 待观察</div>
+              <h3>近日，证监会主席吴清在中国证券投资基金业协会第四届会员代表大会上表示，坚决遏制公募赌押赛道、风格漂移、高位发行等顽疾 更不能回到“冲规模、赚快钱”的老路上去。</h3>
+              <p>关键数字：无显著数字</p>
+            </article>
+            
+
+            <article class="signal-card tone-down">
+              <div class="signal-meta">行业新闻 · 政策监管 · 待观察</div>
+              <h3>...</h3>
+              <p>关键数字：无显著数字</p>
+            </article>
+            
+
+            <article class="signal-card tone-down">
+              <div class="signal-meta">公司新闻 · 公司事件 · 短期</div>
+              <h3>派瑞股份公告，公司股票被实施其他风险警示，6月9日起简称变更为“ST派瑞”。</h3>
+              <p>关键数字：6月、9日</p>
+            </article>
+            
+      </div>
+    </section>
+
+    <section>
+      <h2>主题信号表</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>主题</th><th>提及次数</th><th>机会信号</th><th>风险信号</th><th>净信号</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>AI与算力</td>
+              <td>7</td>
+              <td>7</td>
+              <td>0</td>
+              <td>+7</td>
+            </tr>
+            
+
+            <tr>
+              <td>商品涨价</td>
+              <td>6</td>
+              <td>6</td>
+              <td>0</td>
+              <td>+6</td>
+            </tr>
+            
+
+            <tr>
+              <td>公司事件</td>
+              <td>6</td>
+              <td>0</td>
+              <td>6</td>
+              <td>-6</td>
+            </tr>
+            
+
+            <tr>
+              <td>政策监管</td>
+              <td>4</td>
+              <td>1</td>
+              <td>3</td>
+              <td>-2</td>
+            </tr>
+            
+
+            <tr>
+              <td>机器人</td>
+              <td>4</td>
+              <td>4</td>
+              <td>0</td>
+              <td>+4</td>
+            </tr>
+            
+
+            <tr>
+              <td>地缘与海外</td>
+              <td>3</td>
+              <td>0</td>
+              <td>3</td>
+              <td>-3</td>
+            </tr>
+            
+
+            <tr>
+              <td>光纤光棒</td>
+              <td>3</td>
+              <td>3</td>
+              <td>0</td>
+              <td>+3</td>
+            </tr>
+            
+
+            <tr>
+              <td>能源低碳</td>
+              <td>1</td>
+              <td>1</td>
+              <td>0</td>
+              <td>+1</td>
+            </tr>
+            </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>关键数字摘录</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>章节</th><th>主题</th><th>数字</th><th>原文摘要</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>导语</td>
+              <td>政策监管、AI与算力</td>
+              <td>19个月</td>
+              <td>...</td>
+            </tr>
+            
+
+            <tr>
+              <td>宏观新闻</td>
+              <td>其他</td>
+              <td>6月、5日</td>
+              <td>...</td>
+            </tr>
+            
+
+            <tr>
+              <td>宏观新闻</td>
+              <td>其他</td>
+              <td>5月、7496万、2331.52吨、32万、9.95吨、4月</td>
+              <td>据央行数据，中国5月末黄金储备报7496万盎司（约2331.52吨），环比增加32万盎司（约9.95吨），4月末为7464万盎司（约2321.56吨），为连续第19个月增持黄金。</td>
+            </tr>
+            
+
+            <tr>
+              <td>宏观新闻</td>
+              <td>地缘与海外</td>
+              <td>6月、7日、6月、8日、4月、8日</td>
+              <td>...</td>
+            </tr>
+            
+
+            <tr>
+              <td>行业新闻</td>
+              <td>AI与算力</td>
+              <td>6月、6日、30%、20%、5个月、80%</td>
+              <td>...</td>
+            </tr>
+            
+
+            <tr>
+              <td>行业新闻</td>
+              <td>AI与算力</td>
+              <td>57.4%、42.6%</td>
+              <td>...</td>
+            </tr>
+            
+
+            <tr>
+              <td>行业新闻</td>
+              <td>其他</td>
+              <td>6月、8日、6月、12日、200家公司、2025年</td>
+              <td>...</td>
+            </tr>
+            
+
+            <tr>
+              <td>行业新闻</td>
+              <td>商品涨价</td>
+              <td>6月、7日、9800元/吨、1万、2000元/吨</td>
+              <td>...</td>
+            </tr>
+            
+
+            <tr>
+              <td>行业新闻</td>
+              <td>能源低碳</td>
+              <td>50%、100%</td>
+              <td>从国家能源集团获悉，我国自主研发的氢煤混烧技术首次实现了50%绿氢大比例掺烧以及100%纯氢燃烧，标志着我国清洁低碳氢煤混烧技术取得重大突破。</td>
+            </tr>
+            
+
+            <tr>
+              <td>行业新闻</td>
+              <td>商品涨价</td>
+              <td>180%</td>
+              <td>有数据显示，近三个月，车规级存储芯片整体价格涨幅约在180%。据不完全统计，近期国内共有十余家新能源车企上调售价或收紧优惠，幅度一般在2000元到6000元不等。</td>
+            </tr>
+            
+
+            <tr>
+              <td>行业新闻</td>
+              <td>商品涨价</td>
+              <td>26%、80%、5年</td>
+              <td>...</td>
+            </tr>
+            
+
+            <tr>
+              <td>行业新闻</td>
+              <td>AI与算力</td>
+              <td>2025年</td>
+              <td>据报道，英伟达首席执行官黄仁勋和SK集团董事长Chey将于周一宣布合作计划。此外，黄仁勋还表示，明天要与三星电子的副董事长全永铉（Young Hyun...</td>
+            </tr>
+            
+
+            <tr>
+              <td>公司新闻</td>
+              <td>公司事件</td>
+              <td>6月、9日</td>
+              <td>派瑞股份公告，公司股票被实施其他风险警示，6月9日起简称变更为“ST派瑞”。</td>
+            </tr>
+            
+
+            <tr>
+              <td>公司新闻</td>
+              <td>公司事件</td>
+              <td>1%</td>
+              <td>唯特偶回复深交所关注函：在光模块及先进封装领域的营收占比贡献率均不到1%。</td>
+            </tr>
+            
+
+            <tr>
+              <td>公司新闻</td>
+              <td>公司事件</td>
+              <td>2.49%</td>
+              <td>天德钰公告，股东宁波群志拟减持不超2.49%股份。</td>
+            </tr>
+            
+
+            <tr>
+              <td>公司新闻</td>
+              <td>公司事件</td>
+              <td>1.53%</td>
+              <td>杰普特公告，股东拟合计减持不超1.53%股份。</td>
+            </tr>
+            
+
+            <tr>
+              <td>公司新闻</td>
+              <td>公司事件</td>
+              <td>2028年、30万</td>
+              <td>新宙邦公告，与宁德时代签订电解液合作协议，预计2026-2028年采购量合计30万吨。</td>
+            </tr>
+            
+
+            <tr>
+              <td>环球市场</td>
+              <td>AI与算力</td>
+              <td>6月、6日</td>
+              <td>...</td>
+            </tr>
+            </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>结论与下一步</h2>
+      <div class="panel">
+        <p><b>今日文本最值得跟踪的两个机会方向是人形机器人丝杠和高端光纤预制棒。</b> 二者共同点是产业需求扩张、核心部件或上游材料约束，以及原文中明确出现的价格、价值量或扩产周期证据。</p>
+        <p><b>短线风险不应忽视。</b> 监管表述、海外科技股波动、地缘事件和个股 ST/减持信息都可能影响交易情绪；若后续要用于投资决策，需要补充实时行情、成交量、估值和公司基本面验证。</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Caveats</h2>
+      <div class="caveat">
+        <p><b>非投资建议。</b> 本网页仅基于用户提供的 Word 文档做文本结构化和摘要分析，未接入实时行情、新闻原文链接、公告全文或第三方数据库，也未核验文档事实的真实性和时效性。</p>
+        <p class="source-note">公开网页未包含原始 Word 文件、本机绝对路径或完整抽取全文。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">Generated from a user-provided local document for text analytics only · 2026年6月8日早盘</div>
+  </footer>
+</body>
+</html>
